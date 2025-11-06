@@ -1,6 +1,8 @@
 package main
 
 import (
+	// "github.com/charmbracelet/bubbles/key"
+	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/ssh"
@@ -16,6 +18,17 @@ func handler(s ssh.Session) (tea.Model, []tea.ProgramOption) {
 
 	for _, p := range posts {
 		items = append(items, item{title: p.Title, desc: p.Desc})
+	}
+
+	delegate := list.NewDefaultDelegate()
+	delegate.ShortHelpFunc = func() []key.Binding {
+		return []key.Binding{
+			key.NewBinding(
+				key.WithDisabled(),
+				key.WithKeys("ctrl+a"),
+				key.WithHelp("ctrl+a", "add new post"),
+			),
+		}
 	}
 
 	m := &model{

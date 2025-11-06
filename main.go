@@ -16,13 +16,21 @@ import (
 	"github.com/charmbracelet/wish/activeterm"
 	"github.com/charmbracelet/wish/bubbletea"
 	"github.com/charmbracelet/wish/logging"
-	"gorm.io/driver/sqlite"
+	"github.com/joho/godotenv"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func main() {
+	godotenv.Load() // error gak papa
+
+	dsn := os.Getenv("postgres")
+
 	var err error
-	db, err = gorm.Open(sqlite.Open("sg.db"), &gorm.Config{})
+	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
+		PrepareStmt: false,
+	})
+
 	if err != nil {
 		log.Error(err.Error())
 		return
@@ -32,7 +40,7 @@ func main() {
 
 	kp, err := keygen.New(
 		"awesome",
-		keygen.WithPassphrase("awesome_secret"),
+		keygen.WithPassphrase(os.Getenv("secret")),
 		keygen.WithKeyType(keygen.Ed25519),
 	)
 
