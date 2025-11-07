@@ -1,4 +1,5 @@
-# HackerNews for the Hackers
+Stegosauro
+============
 
 A minimalist, text-only social platform accessed purely through SSH. 
 No fancy web interfaces, no JavaScript, just pure terminal experience.
