@@ -22,7 +22,7 @@ import (
 )
 
 func main() {
-	godotenv.Load() // error gak papa
+	_ = godotenv.Load()
 
 	dsn := os.Getenv("postgres")
 
@@ -50,7 +50,7 @@ func main() {
 	}
 
 	s, err := wish.NewServer(
-		wish.WithAddress(net.JoinHostPort(host, port)),
+		wish.WithAddress(net.JoinHostPort("localhost", "22")),
 		wish.WithHostKeyPEM(kp.RawPrivateKey()),
 		wish.WithMiddleware(
 			bubbletea.Middleware(handler),
@@ -66,7 +66,6 @@ func main() {
 
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
-	log.Info("Starting SSH server", "host", host, "port", port)
 	go func() {
 		if err = s.ListenAndServe(); err != nil && !errors.Is(err, ssh.ErrServerClosed) {
 			log.Error("Could not start server", "error", err)
